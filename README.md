@@ -4,21 +4,21 @@ Normal development flow requires continuous patching the database with local cha
 
 You will not seet database name or user name because we'll use the convention to use an operating system account owning the database in local and production and the databases are named as the user, all this with automatic ssh login in remote. 
 
-#### Rationale
+### Rationale
 
 The first aproach is to compare schemas, suppose you have your local dev version in localhost and the production version in other server called remote-server.
 
-#### 1.- Obtain backup of db structure in production server
+### 1.- Obtain backup of db structure in production server
 ```
 ssh remote-server pg_dump -s -Ox  > remote1.sql
 ```
 
 Note: We obtain only the schema (-s) without any permissions and grant sql comands (-Ox).
-#### 2.- Obtain backup of local database
+### 2.- Obtain backup of local database
 ```
 pg_dump -s -Ox  > local.sql
 ```
-#### 3.- Compare the two schemas
+### 3.- Compare the two schemas
 
 This command compare the two files and filter the lines needed in remote to be like local using standard unix filters grep and sed .
 
@@ -51,7 +51,7 @@ diff remote2.sql local.sql  | grep '^>' | sed 's/^> //'
 
 The only catch is if there are only field differences the sql generated could be invalid, so check it out before proceed.
 
-Finally, this script makes all:
+### Finally, this script makes all:
 
 ```
 #!/bin/bash
