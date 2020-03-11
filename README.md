@@ -4,7 +4,7 @@ Normal development flow requires continuous patching the database, there are som
 
 The first aproach is to compare schemas, suppose you have your local dev version in localhost and the production version in other server called remote-server.
 
-To simplify things we'll use the convention to use and operating system account owning the database in local and production and the databases are named as the user.
+You will not seet database name or user name in this script because we'll use the convention to use an operating system account owning the database in local and production and the databases are named as the user, all this with automatic ssh login in remote. 
 
 #### 1.- Obtain backup of db structure in production server
 ```
