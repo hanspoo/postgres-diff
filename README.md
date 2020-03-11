@@ -1,10 +1,12 @@
 ## Economic postgresql diff
 
-Normal development flow requires continuous patching the database, there are some solutions out there, this one is good enough and just use standard Unix commands.
+Normal development flow requires continuous patching the database with local changes, normally made automatically by the orm software, all of them are more complex than this solution that just use standard Unix commands, and is good enough for us.
+
+You will not seet database name or user name because we'll use the convention to use an operating system account owning the database in local and production and the databases are named as the user, all this with automatic ssh login in remote. 
+
+#### Rationale
 
 The first aproach is to compare schemas, suppose you have your local dev version in localhost and the production version in other server called remote-server.
-
-You will not seet database name or user name in this script because we'll use the convention to use an operating system account owning the database in local and production and the databases are named as the user, all this with automatic ssh login in remote. 
 
 #### 1.- Obtain backup of db structure in production server
 ```
@@ -36,22 +38,21 @@ psql -f remote1.sql temp1
 pg_dump -s -Ox temp1  > remote2.sql
 ```
 
-### Compare structures generated with the same server version
-
-Compare the two schemas.
+### Compare again schemas same server version
 
 ```
 diff remote2.sql local.sql  
 ```
 
-To show the sql needed to patch remote to be like local use:
+Again to show the sql needed to patch remote to be like local use:
 ```
 diff remote2.sql local.sql  | grep '^>' | sed 's/^> //'
 ```
 
-The only catch is if there only field differences the sql generated could be invalid, so check it out before proceed.
+The only catch is if there are only field differences the sql generated could be invalid, so check it out before proceed.
 
 Finally, this script makes all:
+
 ```
 #!/bin/bash
 
@@ -98,11 +99,6 @@ diff $REMOTE2.sql $LOCAL.sql  | grep '^>' | sed 's/^> //'
 dropdb $TEMPDB
 
 ```
-
-This script is simple because uses our defaults:
-    • Operating system user by database
-    • Atomatic ssh on remote servers
-    • Same names of databases in dev and prod.
 
 
 
